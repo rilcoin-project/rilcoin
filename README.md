@@ -36,7 +36,7 @@ Escribir en la terminal los siguientes comandos:
 sudo apt-get update
 sudo apt-get upgrade
 sudo apt-get install git
-git clone https://github.com/AgenorZ/rilcoin
+git clone https://github.com/rilcoin-project/rilcoin
 cd rilcoin
 chmod +x Compilar.sh
 ./Compilar.sh
