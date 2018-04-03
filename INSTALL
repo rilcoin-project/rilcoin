@@ -1,0 +1,9 @@
+Building Rilcoin
+
+See doc/readme-qt.rst for instructions on building Rilcoin-Qt,
+the intended-for-end-users, nice-graphical-interface, reference
+implementation of Rilcoin.
+
+See doc/build-*.txt for instructions on building rilcoind,
+the intended-for-services, no-graphical-interface, reference
+implementation of Rilcoin.
