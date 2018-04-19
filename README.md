@@ -11,7 +11,7 @@ What is Rilcoin?
 
 Rilcoin is a new financial standard that uses Blockchain technology to help strengthen Venezuela's economy, as well as ensuring security on the transactions of each and every one of its users.
  - 2.5 minute block targets
- - subsidy halves in 840k blocks (~4 years)
+ - subsidy halves in 800k blocks (~4 years)
  - ~80 million total coins
  - 50 coins per block
 
@@ -23,7 +23,7 @@ Español
 
 Rilcoin es un nuevo estándar financiero que utiliza la tecnología Blockchain para ayudar a fortalecer la economía de Venezuela, así como para garantizar la seguridad en las transacciones de todos y cada uno de sus usuarios.
  - 2.5 minutos entre bloques
- - Halvin cada 840.000 bloques (~4 años)
+ - Halvin cada 800.000 bloques (~4 años)
  - ~80 millones de monedas
  - 50 monedas por bloque
 
