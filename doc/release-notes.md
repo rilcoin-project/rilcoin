@@ -1,116 +1,143 @@
-0.8.7.4 changes
-=============
-- Enforce v2 blocks at height 710000 on mainnet, 400000 on testnet
-- Add `-maxorphantx=<n>` and `-maxorphanblocks=<n>` options for control over the maximum orphan transactions and blocks
-- Stricter memory limits on CNode
-- Upgrade OpenSSL to 1.0.1i (see https://www.openssl.org/news/secadv_20140806.txt - just to be sure, no critical issues
+Bitcoin Core version 0.10.1 is now available from:
 
-0.8.7.2 changes
-=============
-- Mac and Windows Official Gitian Builds: upgrade to openssl-1.0.1h for CVE-2014-0224
-                   Linux Gitian build uses Lucid 0.9.8k-7ubuntu8.18
+  <https://bitcoin.org/bin/bitcoin-core-0.10.1/>
 
-0.8.7.1 changes
-=============
-- Mac and Windows Official Gitian Builds: upgrade to openssl-1.0.1g for CVE-2014-0160
-                   Linux was not vulnerable with Lucid openssl-0.9.8k
-                   Older versions were only vulnerable with rarely used RPC SSL
-- If you build from source, be sure that your openssl is patched for CVE-2014-0160.
-- Upgrade openssl, qt, miniupnpc, zlib, libpng, qrencode
-- Many bug fixes from Bitcoin 0.8.7rc stable branch
-    including transaction malleability mitigation backports from 0.9
-- Add testnet checkpoints
-- Add new testnet seed
+This is a new minor version release, bringing bug fixes and translation 
+updates. It is recommended to upgrade to this version.
 
-0.8.6.2 changes
-=============
+Please report bugs using the issue tracker at github:
 
-- Windows only: Fixes issue where network connectivity can fail.
+  <https://github.com/bitcoin/bitcoin/issues>
 
-- Cleanup of SSE2 scrypt detection.
+Upgrading and downgrading
+=========================
 
-- Minor fixes:
-  - s/Bitcoin/Rilcoin/ in the Coin Control example
-  - Fix custom build on MacOS X 10.9
-  - Fix QT5 custom build
-  - Update Debian build instructions
-  - Update Homebrew build 
+How to Upgrade
+--------------
 
-0.8.6.1 changes
-=============
+If you are running an older version, shut it down. Wait until it has completely
+shut down (which might take a few minutes for older versions), then run the
+installer (on Windows) or just copy over /Applications/Bitcoin-Qt (on Mac) or
+bitcoind/bitcoin-qt (on Linux).
 
-- Coin Control - experts only GUI selection of inputs before you send a transaction
+Downgrade warning
+------------------
 
-- Disable Wallet - reduces memory requirements, helpful for miner or relay nodes
+Because release 0.10.0 and later makes use of headers-first synchronization and
+parallel block download (see further), the block files and databases are not
+backwards-compatible with pre-0.10 versions of Bitcoin Core or other software:
 
-- 20x reduction in default mintxfee.
+* Blocks will be stored on disk out of order (in the order they are
+received, really), which makes it incompatible with some tools or
+other programs. Reindexing using earlier versions will also not work
+anymore as a result of this.
 
-- Up to 50% faster PoW validation, faster sync and reindexing.
+* The block index database will now hold headers for which no block is
+stored on disk, which earlier versions won't support.
 
-- Peers older than protocol version 70002 are disconnected.  0.8.3.7 is the oldest compatible client.
+If you want to be able to downgrade smoothly, make a backup of your entire data
+directory. Without this your node will need start syncing (or importing from
+bootstrap.dat) anew afterwards. It is possible that the data from a completely
+synchronised 0.10 node may be usable in older versions as-is, but this is not
+supported and may break as soon as the older version attempts to reindex.
 
-- Internal miner added back to Rilcoin.  setgenerate now works, although it is generally a bad idea as it is significantly slower than external CPU miners.
+This does not affect wallet forward or backward compatibility.
 
-- New RPC commands: getbestblockhash and verifychain
-
-- Improve fairness of the high priority transaction space per block
-
-- OSX block chain database corruption fixes
-  - Update leveldb to 1.13
-  - Use fcntl with `F_FULLSYNC` instead of fsync on OSX
-  - Use native Darwin memory barriers
-  - Replace use of mmap in leveldb for improved reliability (only on OSX)
-
-- Fix nodes forwarding transactions with empty vins and getting banned
-
-- Network code performance and robustness improvements
-
-- Additional debug.log logging for diagnosis of network problems, log timestamps by default
-
-- Fix rare GUI crash on send
-
-0.8.5.1 changes
+Notable changes
 ===============
 
-Workaround negative version numbers serialization bug.
+This is a minor release and hence there are no notable changes.
+For the notable changes in 0.10, refer to the release notes for the
+0.10.0 release at https://github.com/bitcoin/bitcoin/blob/v0.10.0/doc/release-notes.md
 
-Fix out-of-bounds check (Rilcoin currently does not use this codepath, but we apply this
-patch just to match Bitcoin 0.8.5.)
+0.10.1 Change log
+=================
 
-0.8.4.1 changes
-===============
+Detailed release notes follow. This overview includes changes that affect external
+behavior, not code moves, refactors or string updates.
 
-CVE-2013-5700 Bloom: filter crash issue - Rilcoin 0.8.3.7 disabled bloom by default so was 
-unaffected by this issue, but we include their patches anyway just in case folks want to 
-enable bloomfilter=1.
+RPC:
+- `7f502be` fix crash: createmultisig and addmultisigaddress
+- `eae305f` Fix missing lock in submitblock
 
-CVE-2013-4165: RPC password timing guess vulnerability
+Block (database) and transaction handling:
+- `1d2cdd2` Fix InvalidateBlock to add chainActive.Tip to setBlockIndexCandidates
+- `c91c660` fix InvalidateBlock to repopulate setBlockIndexCandidates
+- `002c8a2` fix possible block db breakage during re-index
+- `a1f425b` Add (optional) consistency check for the block chain data structures
+- `1c62e84` Keep mempool consistent during block-reorgs
+- `57d1f46` Fix CheckBlockIndex for reindex
+- `bac6fca` Set nSequenceId when a block is fully linked
 
-CVE-2013-4627: Better fix for the fill-memory-with-orphaned-tx attack
+P2P protocol and network code:
+- `78f64ef` don't trickle for whitelisted nodes
+- `ca301bf` Reduce fingerprinting through timestamps in 'addr' messages.
+- `200f293` Ignore getaddr messages on Outbound connections.
+- `d5d8998` Limit message sizes before transfer
+- `aeb9279` Better fingerprinting protection for non-main-chain getdatas.
+- `cf0218f` Make addrman's bucket placement deterministic (countermeasure 1 against eclipse attacks, see http://cs-people.bu.edu/heilman/eclipse/)
+- `0c6f334` Always use a 50% chance to choose between tried and new entries (countermeasure 2 against eclipse attacks)
+- `214154e` Do not bias outgoing connections towards fresh addresses (countermeasure 2 against eclipse attacks)
+- `aa587d4` Scale up addrman (countermeasure 6 against eclipse attacks)
+- `139cd81` Cap nAttempts penalty at 8 and switch to pow instead of a division loop
 
-Fix multi-block reorg transaction resurrection.
+Validation:
+- `d148f62` Acquire CCheckQueue's lock to avoid race condition
 
-Fix non-standard disconnected transactions causing mempool orphans.  This bug could cause 
-nodes running with the -debug flag to crash, although it was lot less likely on Rilcoin 
-as we disabled IsDust() in 0.8.3.x.
+Build system:
+- `8752b5c` 0.10 fix for crashes on OSX 10.6
 
-Mac OSX: use 'FD_FULLSYNC' with LevelDB, which will (hopefully!) prevent the database 
-corruption issues have experienced on OSX.
+Wallet:
+- N/A
 
-Add height parameter to getnetworkhashps.
+GUI:
+- `2c08406` some mac specifiy cleanup (memory handling, unnecessary code)
+- `81145a6` fix OSX dock icon window reopening
+- `786cf72` fix a issue where "command line options"-action overwrite "Preference"-action (on OSX)
 
-Fix Norwegian and Swedish translations.
+Tests:
+- `1117378` add RPC test for InvalidateBlock
 
-Minor efficiency improvement in block peer request handling.
+Miscellaneous:
+- `c9e022b` Initialization: set Boost path locale in main thread
+- `23126a0` Sanitize command strings before logging them.
+- `323de27` Initialization: setup environment before starting QT tests
+- `7494e09` Initialization: setup environment before starting tests
+- `df45564` Initialization: set fallback locale as environment variable
 
+Credits
+=======
 
-0.8.3.7 changes
-===============
+Thanks to everyone who directly contributed to this release:
 
-Fix CVE-2013-4627 denial of service, a memory exhaustion attack that could crash low-memory nodes.
+- Alex Morcos
+- Cory Fields
+- dexX7
+- fsb4000
+- Gavin Andresen
+- Gregory Maxwell
+- Ivan Pustogarov
+- Jonas Schnelli
+- Matt Corallo
+- mrbandrews
+- Pieter Wuille
+- Ruben de Vries
+- Suhas Daftuar
+- Wladimir J. van der Laan
 
-Fix a regression that caused excessive writing of the peers.dat file.
+And all those who contributed additional code review and/or security research:
+- 21E14
+- Alison Kendler
+- Aviv Zohar
+- Ethan Heilman
+- Evil-Knievel
+- fanquake
+- Jeff Garzik
+- Jonas Nick
+- Luke Dashjr
+- Patrick Strateman
+- Philip Kaufmann
+- Sergio Demian Lerner
+- Sharon Goldberg
 
-Add option for bloom filtering.
-
-Fix Hebrew translation.
+As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/bitcoin/).

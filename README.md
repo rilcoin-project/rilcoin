@@ -1,44 +1,48 @@
-Rilcoin
-================================
+Rilcoin Core integration/staging tree
+=====================================
 
-
- - Copyright (c) 2009-2014 Bitcoin Developers
- - Copyright (c) 2014-2018 Litecoin Developers
- - Copyright (c) 2018-2018 Rilcoin Developers
+https://rilcoincrypto.org
 
 What is Rilcoin?
 ----------------
 
 Rilcoin is a new financial standard that uses Blockchain technology to help strengthen Venezuela's economy, as well as ensuring security on the transactions of each and every one of its users.
- - 2.5 minute block targets
- - subsidy halves in 800k blocks (~4 years)
- - ~80 million total coins
- - 50 coins per block
-
-Español
-=======
-
-¿Qué es Rilcoin?
-----------------
-
-Rilcoin es un nuevo estándar financiero que utiliza la tecnología Blockchain para ayudar a fortalecer la economía de Venezuela, así como para garantizar la seguridad en las transacciones de todos y cada uno de sus usuarios.
- - 2.5 minutos entre bloques
- - Halvin cada 800.000 bloques (~4 años)
- - ~80 millones de monedas
- - 50 monedas por bloque
+- - 2.5 minute block targets
+- - subsidy halves in 800k blocks (~4 years)
+- - ~80 million total coi
 
 
-Procedimiento para instalar la billeterá virtual en GNU/Linux con GUI:
----------------------
-Escribir en la terminal los siguientes comandos:
+Development tips and tricks
+---------------------------
 
-```bash
-sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get install git
-git clone https://github.com/rilcoin-project/rilcoin
-cd rilcoin
-chmod +x Compilar.sh
-./Compilar.sh
-./rilcoin-qt
-```
+**compiling for debugging**
+
+Run configure with the --enable-debug option, then make. Or run configure with
+CXXFLAGS="-g -ggdb -O0" or whatever debug flags you need.
+
+**debug.log**
+
+If the code is behaving strangely, take a look in the debug.log file in the data directory;
+error and debugging messages are written there.
+
+The -debug=... command-line option controls debugging; running with just -debug will turn
+on all categories (and give you a very large debug.log file).
+
+The Qt code routes qDebug() output to debug.log under category "qt": run with -debug=qt
+to see it.
+
+**testnet and regtest modes**
+
+Run with the -testnet option to run with "play rilcoins" on the test network, if you
+are testing multi-machine code that needs to operate across the internet.
+
+If you are testing something that can run on one machine, run with the -regtest option.
+In regression test mode, blocks can be created on-demand; see qa/rpc-tests/ for tests
+that run in -regtest mode.
+
+**DEBUG_LOCKORDER**
+
+Rilcoin Core is a multithreaded application, and deadlocks or other multithreading bugs
+can be very difficult to track down. Compiling with -DDEBUG_LOCKORDER (configure
+CXXFLAGS="-DDEBUG_LOCKORDER -g") inserts run-time checks to keep track of which locks
+are held, and adds warnings to the debug.log file if inconsistencies are detected.
