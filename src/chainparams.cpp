@@ -146,7 +146,9 @@ public:
         assert(hashGenesisBlock == uint256("0xd646738ca7abe4ca7e12c044e432ab7e8125174b375b9896921f07928eba0e28"));
         assert(genesis.hashMerkleRoot == uint256("0x7966b381e79a2a909706356a33b5507b4de22f26d67cb188f0d1fb3327c0da33"));
 
-        vSeeds.push_back(CDNSSeedData("rilcoincrypto.org", "217.182.224.94"));
+        vSeeds.push_back(CDNSSeedData("rilcoincrypto.org", "192.187.97.75"));
+        vSeeds.push_back(CDNSSeedData("rilcoincrypto.org", "192.187.97.76"));
+        vSeeds.push_back(CDNSSeedData("rilcoincrypto.org", "192.187.97.78"));
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,49);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,5);
