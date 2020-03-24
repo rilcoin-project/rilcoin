@@ -1,7 +1,7 @@
 Rilcoin Core integration/staging tree
 =====================================
 
-https://rilcoincrypto.org
+https://rilcoin.org
 
 What is Rilcoin?
 ----------------
